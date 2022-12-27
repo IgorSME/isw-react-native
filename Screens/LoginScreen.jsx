@@ -184,10 +184,6 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
     paddingTop: 32,
-    // paddingLeft: 16,
-    // paddingRight: 16,
-    // paddingBottom: 144,
-    // marginBottom: 78,
   },
   textHeader: {
     marginHorizontal: 16,
@@ -201,7 +197,6 @@ const styles = StyleSheet.create({
     lineHeight: 35,
     textAlign: "center",
     letterSpacing: 0.01,
-    // marginTop: 102,
     marginBottom: 32,
 
     color: "#212121",
