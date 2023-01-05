@@ -26,7 +26,7 @@ const initialState = {
 //   });
 // };
 
-export default function LoginScreen({ changePage }) {
+export default function LoginScreen({ navigation }) {
   const [state, setState] = useState(initialState);
   const [isReady, setIsReady] = useState(false);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
@@ -37,9 +37,7 @@ export default function LoginScreen({ changePage }) {
   });
 
   const onSwitchShowPassword = () => setShowPassword((prevState) => !prevState);
-  const onChangePage = () => {
-    changePage("Registration");
-  };
+
   const keyboardHide = () => {
     setIsShowKeyboard(false);
     Keyboard.dismiss();
@@ -168,7 +166,7 @@ export default function LoginScreen({ changePage }) {
           <TouchableOpacity
             activeOpacity={0.8}
             style={styles.link}
-            onPress={onChangePage}
+            onPress={() => navigation.navigate("Register")}
           >
             <Text style={styles.linkTitle}>No account? Register</Text>
           </TouchableOpacity>

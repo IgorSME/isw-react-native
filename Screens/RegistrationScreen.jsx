@@ -29,7 +29,7 @@ const initialState = {
 //   });
 // };
 
-export default function RegistrationScreen({ changePage }) {
+export default function RegistrationScreen({ navigation }) {
   const [state, setState] = useState(initialState);
   const [isReady, setIsReady] = useState(false);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
@@ -42,9 +42,6 @@ export default function RegistrationScreen({ changePage }) {
 
   const onSwitchShowPassword = () => setShowPassword((prevState) => !prevState);
 
-  const onChangePage = () => {
-    changePage("Login");
-  };
   const onPressAddPhoto = () => Linking.openURL("http://google.com");
   const keyboardHide = () => {
     setIsShowKeyboard(false);
@@ -201,7 +198,7 @@ export default function RegistrationScreen({ changePage }) {
           <TouchableOpacity
             activeOpacity={0.8}
             style={styles.link}
-            onPress={onChangePage}
+            onPress={() => navigation.navigate("Login")}
           >
             <Text style={styles.linkTitle}>Already have an account? Login</Text>
           </TouchableOpacity>

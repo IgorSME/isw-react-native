@@ -1,24 +1,11 @@
 import React, { useState } from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import useRoute from "./Components/router";
 import { StyleSheet, View, ImageBackground } from "react-native";
-import RegistrationScreen from "./Screens/RegistrationScreen";
-import LoginScreen from "./Screens/LoginScreen";
 
 export default function App() {
-  const [currentScreen, setCurrentScreen] = useState("Registration");
-  return (
-    <View style={styles.container}>
-      <ImageBackground
-        style={styles.image}
-        source={require("./assets/images/image-bcg.jpg")}
-      >
-        {currentScreen === "Registration" ? (
-          <RegistrationScreen changePage={setCurrentScreen} />
-        ) : (
-          <LoginScreen changePage={setCurrentScreen} />
-        )}
-      </ImageBackground>
-    </View>
-  );
+  const routing = useRoute({});
+  return <NavigationContainer>{routing}</NavigationContainer>;
 }
 
 const styles = StyleSheet.create({
@@ -32,3 +19,17 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
   },
 });
+{
+  /* <View style={styles.container}>
+  <ImageBackground
+    style={styles.image}
+    source={require("./assets/images/image-bcg.jpg")}
+  >
+    {currentScreen === "Registration" ? (
+      <RegistrationScreen changePage={setCurrentScreen} />
+    ) : (
+      <LoginScreen changePage={setCurrentScreen} />
+    )}
+  </ImageBackground>
+</View>; */
+}
