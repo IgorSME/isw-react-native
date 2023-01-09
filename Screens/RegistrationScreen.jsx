@@ -1,7 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
-import * as Font from "expo-font";
-// import AppLoading from "expo-app-loading";
-import * as SplashScreen from "expo-splash-screen";
+import React, { useState } from "react";
 
 import {
   StyleSheet,
@@ -15,6 +12,7 @@ import {
   Text,
   Linking,
   Image,
+  ImageBackground,
 } from "react-native";
 
 const initialState = {
@@ -22,16 +20,9 @@ const initialState = {
   email: "",
   password: "",
 };
-// const loadFonts = async () => {
-//   await Font.loadAsync({
-//     "Roboto-Regular": require("../assets/fonts/Roboto-Regular.ttf"),
-//     "Roboto-Medium": require("../assets/fonts/Roboto-Medium.ttf"),
-//   });
-// };
 
 export default function RegistrationScreen({ navigation }) {
   const [state, setState] = useState(initialState);
-  const [isReady, setIsReady] = useState(false);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [showPassword, setShowPassword] = useState(true);
   const [isFocused, setIsFocused] = useState({
@@ -63,152 +54,136 @@ export default function RegistrationScreen({ navigation }) {
       [textInput]: false,
     });
   };
-  //   if (!isReady) {
-  //     return (
-  //       <AppLoading
-  //         startAsync={loadFonts}
-  //         onFinish={() => setIsReady(true)}
-  //         onError={console.warn}
-  //       />
-  //     );
-  //   }
-  useEffect(() => {
-    async function prepare() {
-      try {
-        await SplashScreen.preventAutoHideAsync();
-        await Font.loadAsync({
-          "Roboto-Regular": require("../assets/fonts/Roboto-Regular.ttf"),
-          "Roboto-Medium": require("../assets/fonts/Roboto-Medium.ttf"),
-        });
-      } catch (e) {
-        console.warn(e);
-      } finally {
-        setIsReady(true);
-      }
-    }
-
-    prepare();
-  }, []);
-  const onLayoutRootView = useCallback(async () => {
-    if (isReady) {
-      await SplashScreen.hideAsync();
-    }
-  }, [isReady]);
-
-  if (!isReady) {
-    return null;
-  }
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS == "ios" ? "padding" : "height"}
-        style={{ flex: 1, justifyContent: "flex-end" }}
+    <View style={styles.container}>
+      <ImageBackground
+        style={styles.image}
+        source={require("../assets/images/image-bcg.jpg")}
       >
-        <View
-          onLayout={onLayoutRootView}
-          style={{
-            ...styles.form,
-            paddingBottom: isShowKeyboard ? 32 : 78,
-          }}
-        >
-          <View style={styles.addPhoto}>
-            <Image source={{ url: "" }} />
-            <TouchableOpacity
-              activeOpacity={0.8}
-              style={styles.add}
-              onPress={onPressAddPhoto}
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <KeyboardAvoidingView
+            behavior={Platform.OS == "ios" ? "padding" : "height"}
+            style={{ flex: 1, justifyContent: "flex-end" }}
+          >
+            <View
+              style={{
+                ...styles.form,
+                paddingBottom: isShowKeyboard ? 32 : 78,
+              }}
             >
-              <Image source={require("../assets/images/add.jpg")} />
-            </TouchableOpacity>
-          </View>
-          <Text style={styles.textHeader}>Registration</Text>
-          <TextInput
-            value={state.login}
-            onChangeText={(value) =>
-              setState((prevState) => ({ ...prevState, login: value }))
-            }
-            placeholder="Login"
-            style={
-              !isFocused.login
-                ? styles.input
-                : {
-                    ...styles.input,
-                    ...styles.focusInput,
+              <View style={styles.addPhoto}>
+                <Image source={{ url: "" }} />
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  style={styles.add}
+                  onPress={onPressAddPhoto}
+                >
+                  <Image source={require("../assets/images/add.jpg")} />
+                </TouchableOpacity>
+              </View>
+              <Text style={styles.textHeader}>Registration</Text>
+              <TextInput
+                value={state.login}
+                onChangeText={(value) =>
+                  setState((prevState) => ({ ...prevState, login: value }))
+                }
+                placeholder="Login"
+                style={
+                  !isFocused.login
+                    ? styles.input
+                    : {
+                        ...styles.input,
+                        ...styles.focusInput,
+                      }
+                }
+                onFocus={() => onFocusHandler("login")}
+                onBlur={() => onBlurHandler("login")}
+              />
+              <TextInput
+                value={state.email}
+                onChangeText={(value) =>
+                  setState((prevState) => ({ ...prevState, email: value }))
+                }
+                placeholder="Email address"
+                style={
+                  !isFocused.email
+                    ? styles.input
+                    : {
+                        ...styles.input,
+                        ...styles.focusInput,
+                      }
+                }
+                onFocus={() => onFocusHandler("email")}
+                onBlur={() => onBlurHandler("email")}
+              />
+              <View
+                style={
+                  !isFocused.password
+                    ? { ...styles.input, marginBottom: 43 }
+                    : {
+                        ...styles.input,
+                        ...styles.focusInput,
+                        marginBottom: 43,
+                      }
+                }
+              >
+                <TextInput
+                  value={state.password}
+                  onChangeText={(value) =>
+                    setState((prevState) => ({ ...prevState, password: value }))
                   }
-            }
-            onFocus={() => onFocusHandler("login")}
-            onBlur={() => onBlurHandler("login")}
-          />
-          <TextInput
-            value={state.email}
-            onChangeText={(value) =>
-              setState((prevState) => ({ ...prevState, email: value }))
-            }
-            placeholder="Email address"
-            style={
-              !isFocused.email
-                ? styles.input
-                : {
-                    ...styles.input,
-                    ...styles.focusInput,
-                  }
-            }
-            onFocus={() => onFocusHandler("email")}
-            onBlur={() => onBlurHandler("email")}
-          />
-          <View
-            style={
-              !isFocused.password
-                ? { ...styles.input, marginBottom: 43 }
-                : {
-                    ...styles.input,
-                    ...styles.focusInput,
-                    marginBottom: 43,
-                  }
-            }
-          >
-            <TextInput
-              value={state.password}
-              onChangeText={(value) =>
-                setState((prevState) => ({ ...prevState, password: value }))
-              }
-              placeholder="Password"
-              secureTextEntry={showPassword}
-              onFocus={() => onFocusHandler("password")}
-              onBlur={() => onBlurHandler("password")}
-              style={styles.inputPass}
-            />
-            <TouchableOpacity
-              onPress={onSwitchShowPassword}
-              style={styles.showBtn}
-            >
-              <Text style={styles.showBtnText}>
-                {showPassword ? "Show" : "Hide"}
-              </Text>
-            </TouchableOpacity>
-          </View>
-          <TouchableOpacity
-            activeOpacity={0.8}
-            style={styles.btn}
-            onPress={onFormSubmit}
-          >
-            <Text style={styles.btnTitle}>Register</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            activeOpacity={0.8}
-            style={styles.link}
-            onPress={() => navigation.navigate("Login")}
-          >
-            <Text style={styles.linkTitle}>Already have an account? Login</Text>
-          </TouchableOpacity>
-        </View>
-      </KeyboardAvoidingView>
-    </TouchableWithoutFeedback>
+                  placeholder="Password"
+                  secureTextEntry={showPassword}
+                  onFocus={() => onFocusHandler("password")}
+                  onBlur={() => onBlurHandler("password")}
+                  style={styles.inputPass}
+                />
+                <TouchableOpacity
+                  onPress={onSwitchShowPassword}
+                  style={styles.showBtn}
+                >
+                  <Text style={styles.showBtnText}>
+                    {showPassword ? "Show" : "Hide"}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              <TouchableOpacity
+                activeOpacity={0.8}
+                style={styles.btn}
+                onPress={onFormSubmit}
+              >
+                <Text style={styles.btnTitle}>Register</Text>
+              </TouchableOpacity>
+              <TouchableOpacity activeOpacity={0.8} style={styles.link}>
+                <Text style={styles.linkTitle}>
+                  Already have an account?{" "}
+                  <Text
+                    style={{ color: "#212121" }}
+                    onPress={() => navigation.navigate("Login")}
+                  >
+                    Login
+                  </Text>
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </KeyboardAvoidingView>
+        </TouchableWithoutFeedback>
+      </ImageBackground>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+  },
+  image: {
+    flex: 1,
+    resizeMode: "cover",
+    justifyContent: "flex-end",
+  },
   form: {
     position: "relative",
     backgroundColor: "#FFFFFF",

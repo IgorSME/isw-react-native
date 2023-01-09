@@ -1,35 +1,60 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import useRoute from "./Components/router";
-import { StyleSheet, View, ImageBackground } from "react-native";
+import * as Font from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
+import AppLoading from "expo-app-loading";
+
+const loadFonts = async () => {
+  await Font.loadAsync({
+    "Roboto-Regular": require("./assets/fonts/Roboto-Regular.ttf"),
+    "Roboto-Medium": require("./assets/fonts/Roboto-Medium.ttf"),
+  });
+};
 
 export default function App() {
-  const routing = useRoute({});
-  return <NavigationContainer>{routing}</NavigationContainer>;
-}
+  const [isReady, setIsReady] = useState(false);
+  // if (!isReady) {
+  //   return (
+  //     <AppLoading
+  //       startAsync={loadFonts}
+  //       onFinish={() => setIsReady(true)}
+  //       onError={console.warn}
+  //     />
+  //   );
+  // }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-  },
-  image: {
-    flex: 1,
-    resizeMode: "cover",
-    justifyContent: "flex-end",
-  },
-});
-{
-  /* <View style={styles.container}>
-  <ImageBackground
-    style={styles.image}
-    source={require("./assets/images/image-bcg.jpg")}
-  >
-    {currentScreen === "Registration" ? (
-      <RegistrationScreen changePage={setCurrentScreen} />
-    ) : (
-      <LoginScreen changePage={setCurrentScreen} />
-    )}
-  </ImageBackground>
-</View>; */
+  useEffect(() => {
+    async function prepare() {
+      try {
+        await SplashScreen.preventAutoHideAsync();
+        await Font.loadAsync({
+          "Roboto-Regular": require("./assets/fonts/Roboto-Regular.ttf"),
+          "Roboto-Medium": require("./assets/fonts/Roboto-Medium.ttf"),
+        });
+      } catch (e) {
+        console.warn(e);
+      } finally {
+        setIsReady(true);
+      }
+    }
+
+    prepare();
+  }, []);
+  const onLayoutRootView = useCallback(async () => {
+    if (isReady) {
+      await SplashScreen.hideAsync();
+    }
+  }, [isReady]);
+
+  if (!isReady) {
+    return null;
+  }
+  const routing = useRoute({});
+
+  return (
+    <NavigationContainer onLayout={onLayoutRootView}>
+      {routing}
+    </NavigationContainer>
+  );
 }
