@@ -3,14 +3,14 @@ import { NavigationContainer } from "@react-navigation/native";
 import useRoute from "./Components/router";
 import * as Font from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
-import AppLoading from "expo-app-loading";
+// import AppLoading from "expo-app-loading";
 
-const loadFonts = async () => {
-  await Font.loadAsync({
-    "Roboto-Regular": require("./assets/fonts/Roboto-Regular.ttf"),
-    "Roboto-Medium": require("./assets/fonts/Roboto-Medium.ttf"),
-  });
-};
+// const loadFonts = async () => {
+//   await Font.loadAsync({
+//     "Roboto-Regular": require("./assets/fonts/Roboto-Regular.ttf"),
+//     "Roboto-Medium": require("./assets/fonts/Roboto-Medium.ttf"),
+//   });
+// };
 
 export default function App() {
   const [isReady, setIsReady] = useState(false);
@@ -32,6 +32,7 @@ export default function App() {
           "Roboto-Regular": require("./assets/fonts/Roboto-Regular.ttf"),
           "Roboto-Medium": require("./assets/fonts/Roboto-Medium.ttf"),
         });
+        await new Promise((resolve) => setTimeout(resolve, 2000));
       } catch (e) {
         console.warn(e);
       } finally {

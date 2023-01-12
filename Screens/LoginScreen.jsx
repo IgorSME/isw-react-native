@@ -20,7 +20,6 @@ const initialState = {
 
 export default function LoginScreen({ navigation }) {
   const [state, setState] = useState(initialState);
-  // const [isReady, setIsReady] = useState(false);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [showPassword, setShowPassword] = useState(true);
   const [isFocused, setIsFocused] = useState({
