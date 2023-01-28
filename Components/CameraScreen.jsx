@@ -3,35 +3,35 @@
 // import { Camera } from "expo-camera";
 // import * as MediaLibrary from "expo-media-library";
 
-// export default function Camera() {
-//   const [hasPermission, setHasPermission] = useState(null);
-//   const [cameraRef, setCameraRef] = useState(null);
-//   const [type, setType] = useState(Camera.Constants.Type.back);
+// export default function CameraScreen() {
+const [hasPermission, setHasPermission] = useState(null);
+const [cameraRef, setCameraRef] = useState(null);
+const [type, setType] = useState(Camera.Constants.Type.back);
 
-//   useEffect(() => {
-//     (async () => {
-//       const { status } = await Camera.useCameraPermissions();
-//       await MediaLibrary.requestPermissionsAsync();
+useEffect(() => {
+  (async () => {
+    const { status } = await Camera.useCameraPermissions();
+    await MediaLibrary.requestPermissionsAsync();
 
-//       setHasPermission(status === "granted");
-//     })();
-//   }, []);
+    setHasPermission(status === "granted");
+  })();
+}, []);
 
-//   if (hasPermission === null) {
-//     return <View />;
-//   }
-//   if (hasPermission === false) {
-//     return <Text>No access to camera</Text>;
-//   }
+if (hasPermission === null) {
+  return <View />;
+}
+if (hasPermission === false) {
+  return <Text>No access to camera</Text>;
+}
 
 //   return (
 //     <View style={styles.container}>
 //       <Camera
 //         style={styles.camera}
 //         type={type}
-//         ref={(ref) => {
-//           setCameraRef(ref);
-//         }}
+// ref={(ref) => {
+//   setCameraRef(ref);
+// }}
 //       >
 //         <View style={styles.photoView}>
 //           <TouchableOpacity

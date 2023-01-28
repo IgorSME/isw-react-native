@@ -3,8 +3,8 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import PostsScreen from "../MainScreens/PostsScreen";
 import CreatePostsScreen from "../MainScreens/CreatePostsScreen";
 import ProfileScreen from "../MainScreens/ProfileScreen";
-import { ImageBackground, StyleSheet, TouchableOpacity } from "react-native";
-import { Grid, User, Plus, LogOut } from "react-native-feather";
+import { ImageBackground, StyleSheet } from "react-native";
+import { Grid, User, Plus } from "react-native-feather";
 
 const MainTab = createBottomTabNavigator();
 
@@ -15,16 +15,9 @@ export default function Home() {
         name="Posts"
         component={PostsScreen}
         options={{
+          headerShown: false,
           tabBarIcon: ({ focused, size, color }) => (
             <Grid size={size} color={color} />
-          ),
-          headerRight: () => (
-            <TouchableOpacity
-              onPress={() => alert("This is a button!")}
-              activeOpacity={0.6}
-            >
-              <LogOut style={styles.logout} />
-            </TouchableOpacity>
           ),
         }}
       />
@@ -53,10 +46,6 @@ export default function Home() {
 }
 
 const styles = StyleSheet.create({
-  logout: {
-    marginRight: 10,
-    color: "#BDBDBD",
-  },
   createPostsNab: {
     width: 70,
     height: 40,

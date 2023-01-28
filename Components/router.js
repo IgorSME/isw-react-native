@@ -5,6 +5,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import RegistrationScreen from "../Screens/RegistrationScreen";
 import LoginScreen from "../Screens/LoginScreen";
 import Home from "../Screens/MainScreens/Home";
+
 // import PostsScreen from "../Screens/MainScreens/PostsScreen";
 // import CreatePostsScreen from "../Screens/MainScreens/CreatePostsScreen";
 // import ProfileScreen from "../Screens/MainScreens/ProfileScreen";
