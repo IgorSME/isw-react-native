@@ -9,14 +9,24 @@ import {
   TextInput,
   TouchableOpacity,
   Button,
+  KeyboardAvoidingView,
+  Keyboard,
+  TouchableWithoutFeedback,
 } from "react-native";
-import { MapPin } from "react-native-feather";
+import { MapPin, Trash2 } from "react-native-feather";
+
+const initialState = {
+  title: "",
+  locationTitle: "",
+};
 
 export default function CreatePostsScreen({ navigation }) {
+  const [state, setState] = useState(initialState);
   const [camera, setCamera] = useState(null);
   const [permission, requestPermission] = Camera.useCameraPermissions();
   const [type, setType] = useState(CameraType.back);
   const [photo, setPhoto] = useState(null);
+  const [isShowKeyboard, setIsShowKeyboard] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -27,17 +37,43 @@ export default function CreatePostsScreen({ navigation }) {
     })();
   }, []);
 
+  const keyboardHide = () => {
+    setIsShowKeyboard(false);
+    Keyboard.dismiss();
+  };
+  useEffect(() => {
+    const keyboardShowListener = Keyboard.addListener("keyboardShow", () => {
+      setIsShowKeyboard(true);
+    });
+    const keyboardHideListener = Keyboard.addListener("keyboardHide", () => {
+      setIsShowKeyboard(false);
+    });
+
+    return () => {
+      keyboardHideListener.remove();
+      keyboardShowListener.remove();
+    };
+  }, []);
+
   const takePhoto = async () => {
     const photo = await camera.takePictureAsync();
 
     setPhoto(photo.uri);
-    console.log("photo", photo.uri);
+    // console.log("photo", photo.uri);
   };
   const publishPost = async () => {
-    const location = await Location.getCurrentPositionAsync();
-    navigation.navigate("DefaultPostScreen", { photo });
+    const location =
+      (await Location.getLastKnownPositionAsync()) ||
+      Location.getCurrentPositionAsync();
+    // console.log("location", location);
+    const coordsCurrent = {
+      latitude: location.coords.latitude,
+      longitude: location.coords.longitude,
+    };
+    navigation.navigate("DefaultPostScreen", { state, photo, coordsCurrent });
+    setState(initialState);
+    setPhoto(null);
   };
-
   if (!permission) {
     return <View />;
   }
@@ -53,62 +89,109 @@ export default function CreatePostsScreen({ navigation }) {
   }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.takePhotoContainer}>
-        <Camera style={styles.camera} type={type} ref={setCamera}>
-          {photo && (
-            <View>
-              <Image
-                source={{ uri: photo }}
-                // style={{ height: 200, width: 200 }}
-              />
-            </View>
-          )}
-          <TouchableOpacity activeOpacity={0.6} onPress={takePhoto}>
-            <Image
-              source={require("../../assets/images/camera.png")}
-              style={styles.imageCamera}
-            />
-          </TouchableOpacity>
-        </Camera>
-      </View>
+    <KeyboardAvoidingView
+      // style={{ flex: 1, justifyContent: "flex-end" }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      enabled
+    >
+      <TouchableWithoutFeedback onPress={keyboardHide}>
+        <View style={styles.container}>
+          <View style={styles.takePhotoContainer}>
+            <Camera style={styles.camera} type={type} ref={setCamera}>
+              {photo && (
+                <View>
+                  <Image
+                    source={{ uri: photo }}
+                    // style={{ height: 200, width: 200 }}
+                  />
+                </View>
+              )}
+              <TouchableOpacity activeOpacity={0.6} onPress={takePhoto}>
+                <Image
+                  source={require("../../assets/images/camera.png")}
+                  style={styles.imageCamera}
+                />
+              </TouchableOpacity>
+            </Camera>
+          </View>
 
-      <Text style={{ ...styles.btnTitle, color: "#BDBDBD", marginBottom: 32 }}>
-        Download photo
-      </Text>
-      <TextInput placeholder="Title..." style={styles.input} />
-      <View style={{ ...styles.input, marginBottom: 32, flexDirection: "row" }}>
-        <MapPin
-          color={"#BDBDBD"}
-          style={{ alignSelf: "center", marginRight: 4 }}
-        />
-        <TextInput
-          placeholder="Location..."
-          style={{
-            fontFamily: "Roboto-Regular",
-            fontStyle: "normal",
-            fontWeight: 400,
-            fontSize: 16,
-            lineHeight: 19,
-          }}
-        />
-      </View>
-      <TouchableOpacity
-        // disabled={true}
-        // activeOpacity={0.8}
-        style={styles.btnDisabled}
-        onPress={publishPost}
-      >
-        <Text style={{ ...styles.btnTitle, color: "#BDBDBD" }}>Publish</Text>
-      </TouchableOpacity>
-    </View>
+          <Text
+            style={{ ...styles.btnTitle, color: "#BDBDBD", marginBottom: 32 }}
+          >
+            Download photo
+          </Text>
+          <TextInput
+            value={state.title}
+            placeholder="Title..."
+            style={styles.input}
+            onChangeText={(value) =>
+              setState((prevState) => ({ ...prevState, title: value }))
+            }
+          />
+          <View
+            style={{
+              ...styles.input,
+              marginBottom: 32,
+              flexDirection: "row",
+            }}
+          >
+            <MapPin
+              color={"#BDBDBD"}
+              style={{ alignSelf: "center", marginRight: 4 }}
+            />
+            <TextInput
+              value={state.locationTitle}
+              placeholder="Location..."
+              style={{
+                fontFamily: "Roboto-Regular",
+                fontStyle: "normal",
+                fontWeight: 400,
+                fontSize: 16,
+                lineHeight: 19,
+              }}
+              onChangeText={(value) =>
+                setState((prevState) => ({
+                  ...prevState,
+                  locationTitle: value,
+                }))
+              }
+            />
+          </View>
+          <TouchableOpacity
+            disabled={!photo && !state.title && !state.locationTitle}
+            activeOpacity={0.8}
+            style={
+              !state.title && !state.locationTitle && !photo
+                ? styles.btnDisabled
+                : styles.btn
+            }
+            onPress={publishPost}
+          >
+            <Text
+              style={
+                !photo && !state.title && !state.locationTitle
+                  ? { ...styles.btnTitle, ...styles.btnTitleDisabled }
+                  : styles.btnTitle
+              }
+            >
+              Publish
+            </Text>
+          </TouchableOpacity>
+          <View style={isShowKeyboard ? { display: "none" } : styles.trashTab}>
+            <TouchableOpacity style={styles.deleteBtn}>
+              <Trash2 name="trash" size={24} color="#BDBDBD" />
+            </TouchableOpacity>
+          </View>
+        </View>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-
+    // position: "relative",
     backgroundColor: "#FFFFFF",
     paddingHorizontal: 16,
     paddingTop: 32,
@@ -171,6 +254,9 @@ const styles = StyleSheet.create({
     lineHeight: 19,
     color: "#FFFFFF",
   },
+  btnTitleDisabled: {
+    color: "#BDBDBD",
+  },
   imageCamera: {
     // position: "absolute",
     borderRadius: 50,
@@ -184,5 +270,18 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     shadowColor: "#000",
     shadowOpacity: 0.25,
+  },
+  trashTab: {
+    // position: "absolute",
+    bottom: 0,
+    width: "100%",
+  },
+  deleteBtn: {
+    alignSelf: "center",
+    paddingVertical: 8,
+    paddingHorizontal: 24,
+    backgroundColor: "#F6F6F6",
+    borderRadius: 20,
+    marginBottom: 8,
   },
 });

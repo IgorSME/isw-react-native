@@ -10,7 +10,15 @@ const MainTab = createBottomTabNavigator();
 
 export default function Home() {
   return (
-    <MainTab.Navigator screenOptions={{ tabBarShowLabel: false }}>
+    <MainTab.Navigator
+      screenOptions={{
+        tabBarShowLabel: false,
+        tabBarStyle: {
+          justifyContent: "space-between",
+          alignItems: "center",
+        },
+      }}
+    >
       <MainTab.Screen
         name="Posts"
         component={PostsScreen}
@@ -30,6 +38,7 @@ export default function Home() {
               <Plus size={size} color={"#FFFFFF"} />
             </ImageBackground>
           ),
+          tabBarStyle: { display: "none" },
         }}
       />
       <MainTab.Screen

@@ -1,18 +1,9 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  FlatList,
-  Image,
-  TouchableOpacity,
-} from "react-native";
-import { MapPin, MessageCircle } from "react-native-feather";
+import { View, StyleSheet, FlatList } from "react-native";
 import PostCard from "../../Components/PostCard";
 
-export default function DefaultPostsScreen({ route, navigation }) {
+export default function DefaultPostScreen({ route, navigation }) {
   const [posts, setPosts] = useState([]);
-  console.log("route.params", route.params);
 
   useEffect(() => {
     if (route.params) {
@@ -64,7 +55,12 @@ export default function DefaultPostsScreen({ route, navigation }) {
           //       </TouchableOpacity>
           //     </View>
           //   </View>
-          <PostCard photo={item.photo} navigation={navigation} />
+          <PostCard
+            photo={item.photo}
+            state={item.state}
+            location={item.coordsCurrent}
+            navigation={navigation}
+          />
         )}
       />
     </View>

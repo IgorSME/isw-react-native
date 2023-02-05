@@ -9,15 +9,15 @@ import {
 } from "react-native";
 import { MapPin, MessageCircle } from "react-native-feather";
 
-export default function PostCard({ photo, navigation }) {
+export default function PostCard({ state, photo, location, navigation }) {
   return (
     <View style={{ marginBottom: 32 }}>
       <Image source={{ uri: photo }} style={styles.postImage} />
-      <Text style={styles.textComment}>Forest</Text>
+      <Text style={styles.textComment}>{state.title}</Text>
       <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
         <View style={styles.box}>
           <TouchableOpacity
-            onPress={() => navigation.navigate("CommentsScreen")}
+            onPress={() => navigation.navigate("CommentsScreen", { photo })}
           >
             <MessageCircle color={"#BDBDBD"} />
           </TouchableOpacity>
@@ -25,14 +25,15 @@ export default function PostCard({ photo, navigation }) {
         </View>
         <TouchableOpacity
           style={styles.box}
-          onPress={() => navigation.navigate("MapScreen")}
+          onPress={() => navigation.navigate("MapScreen", { location })}
         >
           <MapPin
             color={"#BDBDBD"}
             style={{ alignSelf: "center", marginRight: 4 }}
           />
           <Text style={styles.textLocation}>
-            Odessa, Odessa region, Ukraine
+            {/* Odessa, Odessa region, Ukraine */}
+            {state.locationTitle}
           </Text>
         </TouchableOpacity>
       </View>
