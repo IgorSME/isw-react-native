@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Camera, CameraType } from "expo-camera";
 import * as Location from "expo-location";
+import * as MediaLibrary from "expo-media-library";
+import * as ImagePicker from "expo-image-picker";
 import {
   View,
   Text,
@@ -57,9 +59,24 @@ export default function CreatePostsScreen({ navigation }) {
 
   const takePhoto = async () => {
     const photo = await camera.takePictureAsync();
-
+    MediaLibrary.createAssetAsync(photo.uri);
     setPhoto(photo.uri);
     // console.log("photo", photo.uri);
+  };
+  const imagePick = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+    console.log(result);
+
+    if (!result.canceled) {
+      setPhoto(result.assets[0].uri);
+    } else {
+      alert("You did not select any image.");
+    }
   };
   const publishPost = async () => {
     const location =
@@ -90,7 +107,7 @@ export default function CreatePostsScreen({ navigation }) {
 
   return (
     <KeyboardAvoidingView
-      // style={{ flex: 1, justifyContent: "flex-end" }}
+      style={{ flex: 1, justifyContent: "flex-end" }}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       enabled
     >
@@ -114,12 +131,14 @@ export default function CreatePostsScreen({ navigation }) {
               </TouchableOpacity>
             </Camera>
           </View>
+          <TouchableOpacity onPress={imagePick}>
+            <Text
+              style={{ ...styles.btnTitle, color: "#BDBDBD", marginBottom: 32 }}
+            >
+              Download photo
+            </Text>
+          </TouchableOpacity>
 
-          <Text
-            style={{ ...styles.btnTitle, color: "#BDBDBD", marginBottom: 32 }}
-          >
-            Download photo
-          </Text>
           <TextInput
             value={state.title}
             placeholder="Title..."
@@ -177,13 +196,13 @@ export default function CreatePostsScreen({ navigation }) {
               Publish
             </Text>
           </TouchableOpacity>
-          <View style={isShowKeyboard ? { display: "none" } : styles.trashTab}>
-            <TouchableOpacity style={styles.deleteBtn}>
-              <Trash2 name="trash" size={24} color="#BDBDBD" />
-            </TouchableOpacity>
-          </View>
         </View>
       </TouchableWithoutFeedback>
+      <View style={isShowKeyboard ? { display: "none" } : styles.trashTab}>
+        <TouchableOpacity style={styles.deleteBtn}>
+          <Trash2 name="trash" size={24} color="#BDBDBD" />
+        </TouchableOpacity>
+      </View>
     </KeyboardAvoidingView>
   );
 }
@@ -191,7 +210,7 @@ export default function CreatePostsScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // position: "relative",
+    position: "relative",
     backgroundColor: "#FFFFFF",
     paddingHorizontal: 16,
     paddingTop: 32,
@@ -272,8 +291,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
   },
   trashTab: {
-    // position: "absolute",
-    bottom: 0,
+    position: "absolute",
+    bottom: 34,
     width: "100%",
   },
   deleteBtn: {
