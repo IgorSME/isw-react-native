@@ -12,6 +12,8 @@ import {
   Text,
   ImageBackground,
 } from "react-native";
+import { authSignInUser } from "../redux/auth/authOperations";
+import { useDispatch } from "react-redux";
 
 const initialState = {
   email: "",
@@ -26,6 +28,7 @@ export default function LoginScreen({ navigation }) {
     email: false,
     password: false,
   });
+  const dispatch = useDispatch();
 
   const onSwitchShowPassword = () => setShowPassword((prevState) => !prevState);
 
@@ -34,9 +37,10 @@ export default function LoginScreen({ navigation }) {
     Keyboard.dismiss();
   };
   const onFormSubmit = () => {
+    dispatch(authSignInUser(state));
     setState(initialState);
     keyboardHide();
-    console.log("LoginForm: ", state);
+    // console.log("LoginForm: ", state);
   };
   const onFocusHandler = (textInput) => {
     setIsShowKeyboard(true);

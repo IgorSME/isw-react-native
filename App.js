@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { NavigationContainer } from "@react-navigation/native";
-import useRoute from "./Components/router";
+import Main from "./Components/Main";
+import { Provider } from "react-redux";
+
 import * as Font from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
+import { store } from "./redux/store";
 
 export default function App() {
   const [isReady, setIsReady] = useState(false);
@@ -35,7 +37,10 @@ export default function App() {
   if (!isReady) {
     return null;
   }
-  const routing = useRoute({});
 
-  return <NavigationContainer>{routing}</NavigationContainer>;
+  return (
+    <Provider store={store}>
+      <Main />
+    </Provider>
+  );
 }

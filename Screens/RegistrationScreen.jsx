@@ -14,6 +14,8 @@ import {
   Image,
   ImageBackground,
 } from "react-native";
+import { authSignUpUser } from "../redux/auth/authOperations";
+import { useDispatch } from "react-redux";
 
 const initialState = {
   login: "",
@@ -30,6 +32,7 @@ export default function RegistrationScreen({ navigation }) {
     email: false,
     password: false,
   });
+  const dispatch = useDispatch();
 
   const onSwitchShowPassword = () => setShowPassword((prevState) => !prevState);
 
@@ -39,7 +42,7 @@ export default function RegistrationScreen({ navigation }) {
     Keyboard.dismiss();
   };
   const onFormSubmit = () => {
-    setState(initialState);
+    dispatch(authSignUpUser(state));
     keyboardHide();
     console.log("RegistrationForm: ", state);
   };

@@ -1,4 +1,5 @@
 import React from "react";
+import { useDispatch } from "react-redux";
 import { createStackNavigator } from "@react-navigation/stack";
 import { TouchableOpacity, StyleSheet } from "react-native";
 import { LogOut, ArrowLeft } from "react-native-feather";
@@ -6,10 +7,15 @@ import { LogOut, ArrowLeft } from "react-native-feather";
 import DefaultPostScreen from "../NestedScreens/DefaultPostScreen";
 import CommentsScreen from "../NestedScreens/CommentsScreen";
 import MapScreen from "../NestedScreens/MapScreen";
+import { authSignOutUser } from "../../redux/auth/authOperations";
 
 const NestedStack = createStackNavigator();
 
 export default function PostsScreen() {
+  const dispatch = useDispatch();
+  const signOut = () => {
+    dispatch(authSignOutUser());
+  };
   return (
     <NestedStack.Navigator>
       <NestedStack.Screen
@@ -18,10 +24,7 @@ export default function PostsScreen() {
         options={{
           title: "Posts",
           headerRight: () => (
-            <TouchableOpacity
-              onPress={() => alert("This is a button!")}
-              activeOpacity={0.6}
-            >
+            <TouchableOpacity onPress={signOut} activeOpacity={0.6}>
               <LogOut style={styles.logout} />
             </TouchableOpacity>
           ),
