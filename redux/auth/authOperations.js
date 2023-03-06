@@ -16,13 +16,14 @@ export const authSignUpUser =
       await createUserWithEmailAndPassword(auth, email, password);
       await updateProfile(auth.currentUser, {
         displayName: login,
-        //   photoURL: state.auth.photoURL,
+        photoURL: state.auth.photoURL,
       });
       let user = auth.currentUser;
       dispatch(
         authSlice.actions.updateUserProfile({
           userId: user.uid,
           nickname: user.displayName,
+          photoURL: user.photoURL,
         })
       );
     } catch (error) {
@@ -52,6 +53,7 @@ export const authStateChangeUser = () => async (dispatch, getState) => {
       const userUpdateProfile = {
         nickname: user.displayName,
         userId: user.uid,
+        photoURL: user.photoURL,
       };
       dispatch(authSlice.actions.updateUserProfile(userUpdateProfile));
       dispatch(authSlice.actions.authStateChange({ stateChange: true }));

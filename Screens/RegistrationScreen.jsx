@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import Avatar from "../Components/Avatar";
 import {
   StyleSheet,
   View,
@@ -75,7 +75,7 @@ export default function RegistrationScreen({ navigation }) {
                 paddingBottom: isShowKeyboard ? 32 : 78,
               }}
             >
-              <View style={styles.addPhoto}>
+              {/* <View style={styles.addPhoto}>
                 <Image source={{ url: "" }} />
                 <TouchableOpacity
                   activeOpacity={0.8}
@@ -84,7 +84,12 @@ export default function RegistrationScreen({ navigation }) {
                 >
                   <Image source={require("../assets/images/add.jpg")} />
                 </TouchableOpacity>
-              </View>
+              </View> */}
+              <Avatar
+                isEmplty={true}
+                navigation={navigation}
+                isRegestration={true}
+              />
               <Text style={styles.textHeader}>Registration</Text>
               <TextInput
                 value={state.login}

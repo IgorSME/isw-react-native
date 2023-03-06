@@ -3,6 +3,10 @@ import { Camera, CameraType } from "expo-camera";
 import * as Location from "expo-location";
 import * as MediaLibrary from "expo-media-library";
 import * as ImagePicker from "expo-image-picker";
+import { db } from "../../firebase/config";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { collection, addDoc } from "firebase/firestore";
+import { useSelector } from "react-redux";
 import {
   View,
   Text,
@@ -29,6 +33,8 @@ export default function CreatePostsScreen({ navigation }) {
   const [type, setType] = useState(CameraType.back);
   const [photo, setPhoto] = useState(null);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
+
+  const { userId, nickname } = useSelector((state) => state.auth);
 
   useEffect(() => {
     (async () => {
@@ -78,18 +84,52 @@ export default function CreatePostsScreen({ navigation }) {
       alert("You did not select any image.");
     }
   };
+  const uploadPhotoToServer = async (photo) => {
+    const response = await fetch(photo);
+
+    const file = await response.blob();
+
+    const storage = getStorage();
+    const uniquePostId = Date.now().toString();
+    const imagesRef = ref(storage, `postImage/${uniquePostId}`);
+
+    try {
+      await uploadBytes(imagesRef, file);
+      const imagePath = await getDownloadURL(
+        ref(storage, `postImage/${uniquePostId}`)
+      );
+      return imagePath;
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const publishPost = async () => {
+    const photoPath = await uploadPhotoToServer(photo);
     const location =
       (await Location.getLastKnownPositionAsync()) ||
       Location.getCurrentPositionAsync();
-    // console.log("location", location);
     const coordsCurrent = {
       latitude: location.coords.latitude,
       longitude: location.coords.longitude,
     };
-    navigation.navigate("DefaultPostScreen", { state, photo, coordsCurrent });
-    setState(initialState);
-    setPhoto(null);
+    try {
+      const createPost = await addDoc(collection(db, "posts"), {
+        ...state,
+        photo: photoPath,
+        coordsCurrent,
+        userId,
+        nickname,
+      });
+      navigation.navigate("DefaultPostScreen", {
+        // state,
+        // photo,
+        // coordsCurrent,
+      });
+      setState(initialState);
+      setPhoto(null);
+    } catch (error) {
+      console.log(error);
+    }
   };
   if (!permission) {
     return <View />;

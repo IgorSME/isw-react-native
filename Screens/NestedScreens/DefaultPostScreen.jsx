@@ -1,15 +1,27 @@
 import React, { useState, useEffect } from "react";
 import { View, StyleSheet, FlatList } from "react-native";
 import PostCard from "../../Components/PostCard";
+import { db } from "../../firebase/config.js";
+import { collection, onSnapshot, query } from "firebase/firestore";
 
 export default function DefaultPostScreen({ route, navigation }) {
   const [posts, setPosts] = useState([]);
 
+  const getAllPosts = () => {
+    const q = query(collection(db, "posts"));
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const allPosts = [];
+      querySnapshot.forEach((doc) => {
+        allPosts.push({ ...doc.data(), postId: doc.id });
+      });
+      setPosts(allPosts);
+      // console.log("posts", posts);
+    });
+  };
+
   useEffect(() => {
-    if (route.params) {
-      setPosts((prevState) => [...prevState, route.params]);
-    }
-  }, [route.params]);
+    getAllPosts();
+  }, []);
   return (
     <View style={styles.container}>
       <FlatList
@@ -56,9 +68,10 @@ export default function DefaultPostScreen({ route, navigation }) {
           //     </View>
           //   </View>
           <PostCard
-            photo={item.photo}
-            state={item.state}
-            location={item.coordsCurrent}
+            post={item}
+            // photo={item.photo}
+            // state={item.state}
+            // location={item.coordsCurrent}
             navigation={navigation}
           />
         )}
