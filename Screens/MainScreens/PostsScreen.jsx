@@ -8,6 +8,7 @@ import DefaultPostScreen from "../NestedScreens/DefaultPostScreen";
 import CommentsScreen from "../NestedScreens/CommentsScreen";
 import MapScreen from "../NestedScreens/MapScreen";
 import { authSignOutUser } from "../../redux/auth/authOperations";
+import AvatarScreen from "./AvatarScreen";
 
 const NestedStack = createStackNavigator();
 
@@ -49,6 +50,15 @@ export default function PostsScreen() {
           headerBackTitleVisible: false,
           headerBackImage: () => <ArrowLeft style={styles.arrowLeft} />,
         }}
+      />
+      <NestedStack.Screen
+        options={{
+          title: "Update avatar",
+          headerShown: true,
+          backBehavior: "history",
+        }}
+        name="CreateAvatarScreen"
+        component={AvatarScreen}
       />
     </NestedStack.Navigator>
   );

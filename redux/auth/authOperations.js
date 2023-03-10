@@ -48,7 +48,6 @@ export const authSignInUser =
 
 export const authStateChangeUser = () => async (dispatch, getState) => {
   onAuthStateChanged(auth, (user) => {
-    console.log("user", user);
     if (user) {
       const userUpdateProfile = {
         nickname: user.displayName,
@@ -73,3 +72,30 @@ export const authSignOutUser = () => async (dispatch, useState) => {
     console.log("error.message", error.message);
   }
 };
+export const authUpdateAvatar =
+  ({ photoURL, isAuth }) =>
+  async (dispatch, getState) => {
+    console.log("isAuth", isAuth);
+    if (isAuth) {
+      const userUpdateProfile = {
+        photoURL: photoURL,
+      };
+
+      dispatch(authSlice.actions.updateAvatar(userUpdateProfile));
+      return;
+    }
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        console.log("photoURL,", photoURL);
+        await updateProfile(auth.currentUser, { photoURL });
+        console.log("auth.currentUser", auth.currentUser);
+        const userUpdateProfile = {
+          photoURL: photoURL,
+        };
+
+        await updateProfile(auth.currentUser, userUpdateProfile);
+
+        dispatch(authSlice.actions.updateAvatar(userUpdateProfile));
+      }
+    });
+  };

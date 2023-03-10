@@ -1,13 +1,38 @@
 import { Image, StyleSheet, Text, View } from "react-native";
 import { useSelector } from "react-redux";
+import formatDate from "../helpers/formatDate";
 
 const Comment = ({ comment }) => {
+  const { userId } = useSelector((state) => state.auth);
+  const date = formatDate(comment.dateComment);
+  const isCommentOwner = userId === comment.userId;
+  const avatar = comment.photoURL;
   return (
-    <View style={styles.container}>
-      {/* <Image source={{ uri: avatar }} style={styles.avatar} /> */}
-      <View style={styles.comment}>
+    <View
+      style={
+        isCommentOwner
+          ? { ...styles.container, flexDirection: "row-reverse" }
+          : styles.container
+      }
+    >
+      <Image source={{ uri: avatar }} style={styles.avatar} />
+      <View
+        style={
+          isCommentOwner
+            ? { ...styles.comment, ...styles.commentRight }
+            : { ...styles.comment, ...styles.commentLeft }
+        }
+      >
         <Text style={styles.text}>{comment.comment}</Text>
-        <Text style={styles.commentDate}>{comment.dateComment}</Text>
+        <Text
+          style={
+            isCommentOwner
+              ? { ...styles.date, ...styles.dateRight }
+              : { ...styles.date, ...styles.dateLeft }
+          }
+        >
+          {date}
+        </Text>
       </View>
     </View>
   );
@@ -32,12 +57,12 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 6,
     borderBottomRightRadius: 6,
   },
-  leftComment: {
+  commentLeft: {
     marginLeft: 16,
     borderTopLeftRadius: 0,
     borderTopRightRadius: 6,
   },
-  rightComment: {
+  commentRight: {
     marginRight: 16,
     borderTopLeftRadius: 6,
     borderTopRightRadius: 0,

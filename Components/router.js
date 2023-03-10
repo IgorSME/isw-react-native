@@ -5,6 +5,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import RegistrationScreen from "../Screens/RegistrationScreen";
 import LoginScreen from "../Screens/LoginScreen";
 import Home from "../Screens/MainScreens/Home";
+import AvatarScreen from "../Screens/MainScreens/AvatarScreen";
 
 // import PostsScreen from "../Screens/MainScreens/PostsScreen";
 // import CreatePostsScreen from "../Screens/MainScreens/CreatePostsScreen";
@@ -26,6 +27,14 @@ export default function useRoute(isAuth) {
           name="Register"
           component={RegistrationScreen}
           options={{ headerShown: false }}
+        />
+        <AuthStack.Screen
+          name="CreateAvatarScreen"
+          component={AvatarScreen}
+          options={{
+            title: "Create Avatar",
+            headerShown: true,
+          }}
         />
       </AuthStack.Navigator>
     );

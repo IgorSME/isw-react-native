@@ -9,6 +9,7 @@ import {
   TouchableWithoutFeedback,
   KeyboardAvoidingView,
   Keyboard,
+  ScrollView,
 } from "react-native";
 import Comment from "../../Components/Comment";
 import { AntDesign } from "@expo/vector-icons";
@@ -28,7 +29,7 @@ export default function CommentsScreen({ route }) {
   const [allComments, setAllComments] = useState([]);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const { postId } = route.params;
-  const { nickname } = useSelector((state) => state.auth);
+  const { nickname, userId, photoUrl } = useSelector((state) => state.auth);
 
   const getAllComments = () => {
     const q = query(collection(db, "posts", postId, "comments"));
@@ -51,6 +52,8 @@ export default function CommentsScreen({ route }) {
       {
         comment,
         nickname,
+        userId,
+        photoUrl,
         dateComment: Date.now().toString(),
       }
     );
@@ -72,17 +75,20 @@ export default function CommentsScreen({ route }) {
           // marginBottom: isShowKeyboard ? 144 : 16,
         }}
       >
-        <View style={styles.container}>
-          <Image
-            source={{ uri: route.params.photo }}
-            style={styles.postImage}
-          />
-          <View style={styles.comments}>
-            {allComments.map((item, i) => (
-              <Comment key={i} comment={item} />
-            ))}
+        <ScrollView style={{ flex: 1 }}>
+          <View style={styles.container}>
+            <Image
+              source={{ uri: route.params.photo }}
+              style={styles.postImage}
+            />
+            <View style={styles.comments}>
+              {allComments.map((item, i) => (
+                <Comment key={i} comment={item} />
+              ))}
+            </View>
           </View>
-        </View>
+        </ScrollView>
+
         <View
           style={{
             ...styles.inputCommentWrapper,

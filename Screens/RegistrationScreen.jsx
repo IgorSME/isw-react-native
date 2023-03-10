@@ -36,7 +36,6 @@ export default function RegistrationScreen({ navigation }) {
 
   const onSwitchShowPassword = () => setShowPassword((prevState) => !prevState);
 
-  const onPressAddPhoto = () => Linking.openURL("http://google.com");
   const keyboardHide = () => {
     setIsShowKeyboard(false);
     Keyboard.dismiss();
@@ -85,11 +84,7 @@ export default function RegistrationScreen({ navigation }) {
                   <Image source={require("../assets/images/add.jpg")} />
                 </TouchableOpacity>
               </View> */}
-              <Avatar
-                isEmplty={true}
-                navigation={navigation}
-                isRegestration={true}
-              />
+              <Avatar isEmpty={true} navigation={navigation} isAuth={true} />
               <Text style={styles.textHeader}>Registration</Text>
               <TextInput
                 value={state.login}

@@ -4,7 +4,7 @@ const state = {
   userId: null,
   nickname: null,
   stateChange: false,
-  photoUrl: "",
+  photoURL: "",
 };
 
 export const authSlice = createSlice({
