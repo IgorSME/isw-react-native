@@ -35,7 +35,7 @@ export default function CreatePostsScreen({ navigation }) {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
 
   const { userId, nickname } = useSelector((state) => state.auth);
-
+  console.log("Create userId, nickname", userId, nickname);
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -121,9 +121,9 @@ export default function CreatePostsScreen({ navigation }) {
         nickname,
       });
       navigation.navigate("DefaultPostScreen", {
-        // state,
-        // photo,
-        // coordsCurrent,
+        state,
+        photo,
+        coordsCurrent,
       });
       setState(initialState);
       setPhoto(null);

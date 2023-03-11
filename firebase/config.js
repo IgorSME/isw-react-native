@@ -4,6 +4,7 @@ import { getAuth } from "firebase/auth";
 import "firebase/firestore";
 import "firebase/storage";
 import { getFirestore } from "firebase/firestore";
+import { AppState } from "react-native";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAmrJTIn7alGwNrEFsstEanf8KZQkKV3HI",

@@ -29,8 +29,8 @@ export default function CommentsScreen({ route }) {
   const [allComments, setAllComments] = useState([]);
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const { postId } = route.params;
-  const { nickname, userId, photoUrl } = useSelector((state) => state.auth);
-
+  const { nickname, userId, photoURL } = useSelector((state) => state.auth);
+  console.log(nickname, userId, photoURL);
   const getAllComments = () => {
     const q = query(collection(db, "posts", postId, "comments"));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
@@ -38,6 +38,7 @@ export default function CommentsScreen({ route }) {
       querySnapshot.forEach((doc) => {
         allComment.push(doc.data());
       });
+      allComment.sort((x, y) => y.dateComment - x.dateComment);
       setAllComments(allComment);
     });
   };
@@ -53,7 +54,7 @@ export default function CommentsScreen({ route }) {
         comment,
         nickname,
         userId,
-        photoUrl,
+        photoURL,
         dateComment: Date.now().toString(),
       }
     );

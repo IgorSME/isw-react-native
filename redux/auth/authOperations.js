@@ -5,13 +5,13 @@ import {
   onAuthStateChanged,
   signOut,
 } from "firebase/auth";
-import { useState } from "react";
 import { auth } from "../../firebase/config";
 import { authSlice } from "./authReducer";
 
 export const authSignUpUser =
   ({ login, email, password }) =>
   async (dispatch, getState) => {
+    const state = getState();
     try {
       await createUserWithEmailAndPassword(auth, email, password);
       await updateProfile(auth.currentUser, {
@@ -75,7 +75,6 @@ export const authSignOutUser = () => async (dispatch, useState) => {
 export const authUpdateAvatar =
   ({ photoURL, isAuth }) =>
   async (dispatch, getState) => {
-    console.log("isAuth", isAuth);
     if (isAuth) {
       const userUpdateProfile = {
         photoURL: photoURL,

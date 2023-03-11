@@ -7,6 +7,7 @@ const Comment = ({ comment }) => {
   const date = formatDate(comment.dateComment);
   const isCommentOwner = userId === comment.userId;
   const avatar = comment.photoURL;
+  console.log("avatar", avatar);
   return (
     <View
       style={
@@ -45,7 +46,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   avatar: {
-    borderRadius: 8,
+    borderRadius: 90,
     width: 28,
     height: 28,
   },

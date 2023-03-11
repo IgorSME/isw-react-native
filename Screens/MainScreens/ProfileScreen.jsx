@@ -31,7 +31,6 @@ export default function ProfileScreen({ navigation }) {
         allPosts.push({ ...doc.data(), postId: doc.id });
       });
       setPosts(allPosts);
-      // console.log("posts", posts);
     });
   };
 
